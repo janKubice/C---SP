@@ -3,10 +3,13 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#define LENGHT_NODE_NAME 100
+
 /**
  * @brief
  */
 typedef struct _node{
+    char name[LENGHT_NODE_NAME];
     unsigned int id;
     point position;
     struct _node *neighbours;
