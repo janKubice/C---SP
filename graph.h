@@ -3,17 +3,33 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#define LENGHT_NODE_NAME 100
+#define NODE_NAME_LENGHT 100
+#define COUNTRY_NAME_LENGHT 50
+
+typedef struct _station{
+    char name[NODE_NAME_LENGHT];
+    unsigned int id;
+    struct _edge *first_element;
+}station;
 
 /**
- * @brief
+ * @brief Struktura reprezentující uzel listu
  */
-typedef struct _node{
-    char name[LENGHT_NODE_NAME];
+typedef struct _edge{
     unsigned int id;
-    point position;
-    struct _node *neighbours;
-} node;
+    struct _edge *next;
+
+    unsigned int id_src;
+    unsigned int id_dest;
+    float weight;
+} edge;
+
+/**
+* @brief Struktura uchovávající list sousednosti
+*/
+typedef struct _list{
+    struct _station *head;
+} list;
 
 /**
 * @brief Struktura uchovávající graf
@@ -21,34 +37,26 @@ typedef struct _node{
 typedef struct _graph
 {
     unsigned int vertices;
-    unsigned int edges;
-    struct _node *nodes;
+    struct _list *list;
 } graph;
 
 /**
- * @brief
+ * @brief vytvoří graf se zadaným počtem vrcholů
  */
-typedef struct _edge {
-    unsigned int id;
-    struct _node *node_src;
-    struct _node *node_dest;
-    float weight;
-}edge;
+graph *create_graph(int vertices, station *nodes);
+
+void make_graph(graph *graph, station *nodes, edge *edges, int n, int e);
 
 /**
- * @brief
+ * @brief uvolní graf z paměti
  */
-graph *create_graph();
+void destroy_graph(graph *graph);
 
 /**
- * @brief
+ * @brief přidá do grafi hranu
  */
-void destroy_graph(graph graph);
+void add_edge(graph *graph, edge *edge);
 
-/**
- * @brief
- */
-void add_edge(graph graph);
-
+void print_graph(graph *graph);
 
 #endif
