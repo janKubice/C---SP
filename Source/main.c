@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "load_data.h"
+#include <malloc.h>
+
+#include "../Headers/load_data.h"
+#include "../Headers/algorithms.h"
+#include "../Headers//write_data.h"
 
 #define PATH_SIZE 100
 
@@ -39,6 +43,11 @@ int main(int argc, char *argv[]){
     }
 
     FILE *file = fopen(nodes_path, "r");
+    if (!file){
+        printf("Node file opening failed");
+        exit(EXIT_FAILURE);
+    }
+
     graph *graph;
     station *nodes;
     edge *edges;
@@ -62,6 +71,10 @@ int main(int argc, char *argv[]){
     fclose(file);
 
     file = fopen(edges_path, "r");
+    if (!file){
+        printf("Edge file opening failed");
+        exit(EXIT_FAILURE);
+    }
     if (check_edge_file(file)){
         printf("Edge params checked!\n");
         edges = load_edges(edges_path,&e);
@@ -75,11 +88,20 @@ int main(int argc, char *argv[]){
         printf("Invalid edge file!\n");
         exit(2);
     }
-    printf("Creating graph");
+
+    int a;
+    for (a = 500; a < 520; a++){
+        if (edges[a].id > 0)
+            printf("%d, %d, %s, %f\n", edges[a].id, edges[a].nation_id, edges[a].nation_name, edges[a].weight);
+    }
+
+    write_edges(m_out_path, edges);
+
+
+    printf("Creating graph\n");
     graph = create_graph(n, nodes);
     printf("Making graph\n");
     make_graph(graph, nodes,edges, n,e);
     printf("Graph done!\n");
-    print_graph(graph);
     exit(EXIT_SUCCESS);
 }

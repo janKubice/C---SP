@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "load_data.h"
+#include "../Headers/load_data.h"
 
 #define NODES_PARAMS 3
 #define EDGES_PARAMS 7
@@ -12,6 +12,7 @@
 #define NODE_NAME_COLUMN 3
 
 #define EDGE_ID_COLUMN 6
+#define EDGE_COUNTRY_ID 5
 #define EDGE_CNAME_COLUMN 4
 #define EDGE_SOURCE_COLUMN 3
 #define EDGE_TARGER_COLUMN 2
@@ -88,11 +89,11 @@ station *load_nodes(char *file_path, int *n){
         }
         
         l++;
-        /*
+        
         stop_line++;
         if (stop_line == 1000){
             break;
-        }*/
+        }
     }
 
     int a;
@@ -200,12 +201,16 @@ edge *load_edges(char *file_path, int *e){
     int i;
     char *tmp;
     char *column;
+    edge *tmp_n;
+    int j;
+    int bad = 0;
+
 
     while (fgets(line, 10000, file))
     {
-        int params_in_line = get_param_count(_strdup(line));
-        char *tmp = _strdup(line);
-        char *column = getfield(tmp, params_in_line-EDGE_ID_COLUMN, ",");
+        params_in_line = get_param_count(_strdup(line));
+        tmp = _strdup(line);
+        column = getfield(tmp, params_in_line-EDGE_ID_COLUMN, ",");
         if (atoi(column) > max_id){
             max_id = atoi(column);
         }
@@ -225,6 +230,8 @@ edge *load_edges(char *file_path, int *e){
         temp_edge->id_src = 0;
         temp_edge->id_dest = 0;
         temp_edge->weight = 0;
+        temp_edge->nation_id = 0;
+        strcpy(temp_edge->nation_name, "");
 
         params_in_line = get_param_count_edges(_strdup(line));
         real_params = get_real_params(_strdup(line));
@@ -233,8 +240,8 @@ edge *load_edges(char *file_path, int *e){
             column = getfield(tmp, i, ",");
             
             if (real_params == 8){
-                if (i == EDGE_LENGHT_COLUMN){
-                temp_edge->weight = atof(column);
+                if (i == EDGE_LENGHT_COLUMN-1){
+                    temp_edge->weight = atof(column);
                 }
                 else if(i == params_in_line-EDGE_ID_COLUMN){
                     temp_edge->id = atoi(column);
@@ -245,9 +252,16 @@ edge *load_edges(char *file_path, int *e){
                 else if (i == params_in_line-EDGE_TARGER_COLUMN-1){
                     temp_edge->id_dest = atoi(column);
                 }
+                else if (i == params_in_line-EDGE_CNAME_COLUMN){
+                    strcpy(temp_edge->nation_name, column);
+                }
+                else if (i == params_in_line-EDGE_COUNTRY_ID){
+                    temp_edge->id_dest = atoi(column);
+                }
+                /*TODO načíst WTK*/
             }else{
-                if (i == EDGE_LENGHT_COLUMN){
-                temp_edge->weight = atof(column);
+                if (i == EDGE_LENGHT_COLUMN-1){
+                    temp_edge->weight = atof(column);
                 }
                 else if(i == params_in_line-EDGE_ID_COLUMN){
                     temp_edge->id = atoi(column);
@@ -258,41 +272,46 @@ edge *load_edges(char *file_path, int *e){
                 else if (i == params_in_line-EDGE_TARGER_COLUMN){
                     temp_edge->id_dest = atoi(column);
                 }
+                else if (i == params_in_line-EDGE_CNAME_COLUMN){
+                    strcpy(temp_edge->nation_name, column);
+                }
+                else if (i == params_in_line-EDGE_COUNTRY_ID){
+                    temp_edge->id_dest = atoi(column);
+                }
+                /*TODO načíst WTK*/
             }
 
-            
+            /*
+            tmp = NULL;
+            column = NULL;*/
         }
         
-        int j;
-        int bad = 0;
+        bad = 0;
         for(j = 0; j <= edges_count; j++){
-            edge tmp_n = edges[j];
-            if ((tmp_n.id == temp_edge->id) || (temp_edge->id_src == temp_edge->id_dest)){
+            tmp_n = &edges[j];
+            if ((tmp_n->id == temp_edge->id) || (temp_edge->id_src == temp_edge->id_dest)){
                 bad = 1;
                 break;
             }
         }
-
+        tmp_n = NULL;
         if (bad == 0){
-            /*printf("%d - (%d - %d) params: %d\n",temp_edge->id, temp_edge->id_src, temp_edge->id_dest, params_in_line);*/
+            printf("%d - (%d - %d) cname: %s, w: %f, cid: %d \n",temp_edge->id, temp_edge->id_src, temp_edge->id_dest,temp_edge->nation_name, temp_edge->weight, temp_edge->nation_id);
             memcpy(&edges[edges_count],temp_edge,sizeof(edge));
             /*edges[temp_edge.id] = temp_edge;*/
             edges_count++;
         }
         
         l++;
-        /*
+        
         stop_line++;
         if (stop_line == 200){
             break;
-        }*/
+        }
     }
-    /*
-    for (i = 0; i < 100; i++){
-        printf("%d -> (%d , %d)\n", edges[i].id, edges[i].id_src, edges[i].id_dest);
-    }*/
+
     free(temp_edge);
-    *e = max_id /*edges_count*/;
+    *e = max_id;
     return edges;
 }
 
