@@ -1,93 +1,107 @@
-#include <stdio.h> 
-#include <stdlib.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <float.h>
 
 #include "../Headers/graph.h"
+#include "../Headers/algorithms.h"
 
-graph *create_graph(int vertices, station *nodes){
-    if (vertices <= 0 || !nodes){
-        printf("Terminating procces - cant create graph, nodes is NULL");
+graph *create_graph(station *node, edge *edges, int edges_count, int node_count)
+{
+    if (!node || !edges || edges_count <= 0 || node_count <= 0)
+    {
+        printf("Terminating procces - cant create graph");
         exit(EXIT_FAILURE);
     }
-   
-    graph *new_graph = (graph*)malloc(sizeof(graph));
-    if (!new_graph){
+    graph *new_graph = (graph *)malloc(sizeof(graph));
+    if (!new_graph)
+    {
         printf("Not enough memory - graph\n");
         return 0;
     }
 
-    new_graph->list = (list*)malloc(sizeof(list) * vertices);
-    if (!new_graph->list){
-        printf("Not enough memory - list\n");
-        return 0;
-    }
-
-    /*Podle ID vrcholu přiřadím do listu na index ID vrcholu*/
-    int i;
-    for (i = 0; i < vertices; i++){
-        new_graph->list[nodes[i].id].head = &nodes[i];
-    }
-    new_graph->vertices = vertices;
+    new_graph->edges = edges_count;
+    new_graph->vertices = node_count;
+    new_graph->stations_list = node;
+    new_graph->edges_list = edges;
 
     return new_graph;
 }
 
-void make_graph(graph *graph, station *nodes, edge *edges, int n, int e){
-    if (!graph || !nodes || !edges || n <= 0 || e <= 0){
-        printf("Terminating procces - cant create graph");
-        exit(EXIT_FAILURE);
-    }
+graph *create_complete_graph(station *node,int node_count){
+    int edge_count = (int)((node_count*(node_count-1)/2));
+    edge *edges = (edge*)malloc(sizeof(edge)*node_count);
+    graph *g = (graph*)malloc(sizeof(graph));
+    int edges_in_g = 0;
 
-    int i, j;
+    int i,j,e;
+    int can_add;
+    for (i = 0; i < node_count; ++i){
+        for (j = 0; j < node_count; ++j){
+            can_add = 1;
+            if (i != j){
+                for (e = 0; e < edges_in_g; e++){
+                    if ((edges[e].id_src == i && edges[e].id_dest == j) || (edges[e].id_dest == i && edges[e].id_src == j)){
+                        can_add = 0;
+                    }
+                }
 
-    for (i = 0; i < e; i++){
-        if (edges[i].id == 0){
-            continue;
+                if (can_add){
+                    edges[edges_in_g].id = edges_in_g+1;
+                    edges[edges_in_g].id_src = i;
+                    edges[edges_in_g].id_dest = j;
+                    edges[edges_in_g].nation_id = 0;
+                    edges[edges_in_g].weight = great_circle(node[i].pos_x, node[i].pos_y, node[j].pos_x, node[j].pos_y);
+                    edges_in_g++;
+                }
+            }
         }
-        add_edge(graph, &edges[i]);
     }
+
+    g->stations_list = node;
+    g->edges_list = edges;
+    g->vertices = node_count;
+    g->edges = edge_count;
+    return g;
 }
 
-void add_edge(graph *graph, edge *edge){
-    if (!graph || !edge || edge->id == 0 || edge->id_src == 0 || edge->id_dest == 0){
-        return;
-    }
-    if (graph->list[edge->id_src].head->first_element == NULL){
-        graph->list[edge->id_src].head->first_element = edge;
-    }
-    else{
-        edge->next = graph->list[edge->id_src].head->first_element;
-        graph->list[edge->id_src].head->first_element = edge;
-    }
+void destroy_graph(graph **graph)
+{
+    destroy_edges(&((*graph)->edges_list));
+    destroy_nodes(&((*graph)->stations_list));
 
-    if (graph->list[edge->id_dest].head->first_element == NULL){
-        graph->list[edge->id_dest].head->first_element = edge;
-    }
-    else{
-        edge->next = graph->list[edge->id_dest].head->first_element;
-        graph->list[edge->id_dest].head->first_element = edge;
-    }    
+    free(&graph);
+    graph == NULL;
 }
 
-void print_graph(graph *graph, int vert_number){
-    if (!graph){
-        return;
-    }
-    printf("Graph: \n");
-    int vert;
-    for (vert = 1; vert < vert_number; vert++){
-        edge *node = graph->list[vert].head->first_element;
+void destroy_nodes(station **nodes)
+{
 
-        if (!node){
-            continue;
-        }
-
-        printf("List of vert: %d\n", graph->list[vert].head->id);
-        while (node->id != -1)
-        {
-            printf(" -> (e_id: %d - dest: %d) ", node->id, node->id_dest);
-            node = node->next;
-        }
-        printf("\n");
+    int index = 0;
+    station *tmp_n = &nodes[index];
+    while (tmp_n)
+    {
+        free(&tmp_n);
+        tmp_n = NULL;
+        index++;
+        tmp_n = &nodes[index];
     }
+
+    free(nodes);
 }
 
+void destroy_edges(edge **edges)
+{
+
+    int index = 0;
+    edge *tmp_e = &edges[index];
+    while (tmp_e)
+    {
+        free(&tmp_e);
+        tmp_e = NULL;
+        index++;
+        tmp_e = &edges[index];
+    }
+    free(edges);
+}

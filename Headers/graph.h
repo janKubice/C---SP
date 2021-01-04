@@ -1,90 +1,70 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include "point.h"
-
 #define NAME_LENGHT 100
 #define COUNTRY_NAME_LENGHT 50
+#define WKT_SIZE 12000
 
 /**
  * @brief Struktura reprezentujici vrchol grafu
  */
-typedef struct _station{
+typedef struct _station
+{
+    float pos_x;
+    float pos_y;
     char name[NAME_LENGHT];
     unsigned int id;
-    struct _edge *first_element;
-}station;
+} station;
 
 /**
  * @brief Struktura reprezentujici uzel listu
+ * zdroj a cíl uzlu je uchovávaný pouze jako id příslušné hrany
  */
-typedef struct _edge{
+typedef struct _edge
+{
     unsigned int id;
     unsigned int nation_id;
     char nation_name[NAME_LENGHT];
-    struct _edge *next;
 
-    struct _point *points;
+    /*string uchovávající MULTILINESTRING*/
+    char pos[WKT_SIZE];
     unsigned int id_src;
     unsigned int id_dest;
     float weight;
 } edge;
 
 /**
-* @brief Struktura uchovavajici list sousednosti
-*/
-typedef struct _list{
-    struct _station *head;
-} list;
-
-/**
 * @brief Struktura uchovavajici graf
+* obsahuje počet hran a vrcholů, také obsahuje pole hran a vrcholů
 */
 typedef struct _graph
 {
     unsigned int vertices;
     unsigned int edges;
-    struct _list *list;
 
     struct _station *stations_list;
     struct _edge *edges_list;
 } graph;
 
 /**
- * @brief vytvori prazdny graf se zadanym poctem vrcholu
- * @param vertices pocet vrcholu
- * @param nodes vrcholy grafu
+ * @brief vytvoří graf reprezentovaný polem hran
+ * @param node pole vrcholů
+ * @param edges pole hran
+ * @param edges_count počet hran
+ * @param node_count počet vrcholů
  */
-graph *create_graph(int vertices, station *nodes);
+graph *create_graph(station *node, edge *edges, int edges_count, int node_count);
 
-/**
- * @brief vytvori graf
- * @param graph graf ktery se ma vytvořit
- * @param nodes vrcholy grafu
- * @param edges hrany grafu
- * @param n pocet vrcholu grafu
- * @param e pocet hran grafu
- */
-void make_graph(graph *graph, station *nodes, edge *edges, int n, int e);
+graph *create_complete_graph(station *node,int node_count);
 
 /**
  * @brief uvolní graf z paměti
  * @param graph graf k uvolneni
  */
-void destroy_graph(graph *graph);
+void destroy_graph(graph **graph);
 
-/**
- * @brief přidá do grafu hranu
- * @param graph graf do ktereho se ma pridat
- * @param edge hrana k pridani
- */
-void add_edge(graph *graph, edge *edge);
+void destroy_nodes(station **nodes);
 
-/**
- * @brief Vypise prislusny graf
- * @param graph graf k vypsani
- * @param vert_number kolik vrcholu ma byt vypsano
- */
-void print_graph(graph *graph, int vert_number);
+void destroy_edges(edge **edges);
 
 #endif
