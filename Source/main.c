@@ -117,7 +117,8 @@ int main(int argc, char *argv[])
         printf("Invalid edge file!\n");
         exit(2);
     }
-   
+    
+
     printf("----------MST----------\n");
     /*-mst přepínač*/
     int kruskal_size;
@@ -141,18 +142,19 @@ int main(int argc, char *argv[])
 
     printf("----------MRN----------\n");
     /*-mrn přepínač*/
-    if (m_out){
-
+    if (m_out)
+    {
         edge *kruskal_mrn;
         printf("Creating graph -mrn\n");
         graph = create_complete_graph(nodes, n);
         printf("Graph done -mrn!\n");
 
         printf("Kruskal started - mrn\n");
+        
         kruskal_mrn = kruskal(graph, &kruskal_size);
         /*destroy_edges(graph->edges_list);*/
         printf("Kruskal done - mrn\n");
-        
+
         write_edges_mrn(m_out_path, kruskal_mrn, kruskal_size, nodes);
         /*destroy_edges(kruskal_mst);
         destroy_graph(graph);*/

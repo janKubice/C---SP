@@ -15,8 +15,8 @@
 station *load_nodes(char *file_path, int *n);
 
 /**
- * @param file soubor na zkontrolování
  * @brief zkontroluje zda je soubor s vrcholy ve správném formátu
+ * @param file soubor na zkontrolování
  * @return 1 - je v pořádku, 0 - není
  */
 int check_node_file(FILE *file);
@@ -39,13 +39,6 @@ char *getfield(char *line, int pos, char *delimiter);
 edge *load_edges(char *file_path, int *e);
 
 /**
- * @brief zjistí kolik prvků se v řádce nachází
- * @param line jedna řádka textu
- * @return počet prvků v řádce
- */
-int get_param_count(char *line);
-
-/**
  * @brief zjistí kolik parametrů se nachází na řádce, když je méně jak 8 vrátí 8,
  * využívá se pro zjištění toho kde je chybí název státu
  * @param line jedna řádka textu
@@ -62,9 +55,15 @@ int get_real_params(char *line);
 
 /**
  * @brief zkontroluje zda je soubor s hranamy ve správném formátu
+ * @param file soubor ke zkontrolování
  */
 int check_edge_file(FILE *file);
 
+/**
+ * @brief z MULTILINESTRINGu získá hodnotu na pozici
+ * @param line řádka obsahující MULTILINESTRING
+ * @param pos pozice hodnoty
+ */
 float extract_pos(char *line, int pos);
 
 #endif

@@ -3,7 +3,7 @@
 
 #define NAME_LENGHT 100
 #define COUNTRY_NAME_LENGHT 50
-#define WKT_SIZE 12000
+#define WKT_SIZE 15000
 
 /**
  * @brief Struktura reprezentujici vrchol grafu
@@ -47,7 +47,7 @@ typedef struct _graph
 } graph;
 
 /**
- * @brief vytvoří graf reprezentovaný polem hran
+ * @brief vytvoří graf reprezentovaný polem hran a vrcholů
  * @param node pole vrcholů
  * @param edges pole hran
  * @param edges_count počet hran
@@ -55,16 +55,29 @@ typedef struct _graph
  */
 graph *create_graph(station *node, edge *edges, int edges_count, int node_count);
 
+/**
+ * @brief vytvoří úplný graf reprezentovaný polem hran a vrcholů
+ * @param node pole vrcholů
+ * @param node_count počet vrcholů
+ */
 graph *create_complete_graph(station *node,int node_count);
 
 /**
  * @brief uvolní graf z paměti
- * @param graph graf k uvolneni
+ * @param graph graf k uvolnění
  */
 void destroy_graph(graph **graph);
 
+/**
+ * @brief uvolní pole vrcholů z paměti
+ * @param graph vrcholy k uvolnění
+ */
 void destroy_nodes(station **nodes);
 
+/**
+ * @brief uvolní pole hran z paměti
+ * @param graph hrany k uvolnění
+ */
 void destroy_edges(edge **edges);
 
 #endif
