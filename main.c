@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
     }
     fclose(file);
 
+
     /*část s načítámím souboru s hranama*/
     file = fopen(edges_path, "r");
     if (!file)
@@ -101,6 +102,7 @@ int main(int argc, char *argv[])
     {
         printf("Edge params checked!\n");
         edges = load_edges(edges_path, &e);
+
         if (!edges)
         {
             printf("Edges loading failure!\n");
@@ -116,7 +118,7 @@ int main(int argc, char *argv[])
         printf("Invalid edge file!\n");
         exit(2);
     }
-    
+    fclose(file);
     graph *graph;
     printf("----------MST----------\n");
     /*-mst přepínač*/
@@ -138,6 +140,7 @@ int main(int argc, char *argv[])
         /*destroy_edges(kruskal_mst);
         destroy_graph(graph);*/
         
+        free(kruskal_mst);
 	free(graph->edges_list);
 	graph->edges_list = NULL;
     	free(graph);
@@ -166,7 +169,7 @@ int main(int argc, char *argv[])
         /*destroy_edges(kruskal_mst);
         destroy_graph(graph);*/
         
-
+	free(kruskal_mrn);
         free(graph->stations_list);
         free(graph->edges_list);
 	graph->edges_list = NULL;

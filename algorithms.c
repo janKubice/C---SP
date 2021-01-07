@@ -89,7 +89,7 @@ edge *kruskal(graph *graph, int *kruskal_size)
         }
 
     }
-
+	
     destroy_subsets(&subsets, v);
     *kruskal_size = size;
     return result;

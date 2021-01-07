@@ -90,5 +90,6 @@ void write_edges_mrn(char *filename, edge *edges, int edges_count, station *node
     }
 
     fclose(file);
+ 
     printf("File created: %s\n", filename);
 }

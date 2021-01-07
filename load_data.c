@@ -158,6 +158,7 @@ station *load_nodes(char *file_path, int *n)
             nodes_loaded++;
         }
     }
+	fclose(file);
 
     *n = nodes_loaded;
     return nodes;
@@ -353,6 +354,7 @@ edge *load_edges(char *file_path, int *e)
             edges_count++;
         }
     }
+    fclose(file);
     printf("%d - ", edges_count);
     *e = edges_count;
     return edges;
