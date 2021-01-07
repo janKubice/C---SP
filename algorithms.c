@@ -42,8 +42,8 @@ edge *kruskal(graph *graph, int *kruskal_size)
     {
         return NULL;
     }
-
-    unsigned int v = graph->vertices;
+    
+    int v = graph->vertices;
     edge *result = (edge *)malloc(sizeof(edge) * v);
     int size = 0;
 
@@ -59,14 +59,14 @@ edge *kruskal(graph *graph, int *kruskal_size)
     int i = 0;
     int j = 0;
 
-    subset *subsets = (subset *)malloc(sizeof(subset) * v+1);
+    subset *subsets = (subset *)malloc(sizeof(subset) * v);
     if (!subsets)
     {
         printf("Not enough memory - kruskal - subsets\n");
         return NULL;
     }
 
-    for (j = 0; j < v+1; j++)
+    for (j = 0; j < v; ++j)
     {
         subsets[j].parent = j;
         subsets[j].rank = 0;
