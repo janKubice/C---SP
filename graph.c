@@ -73,11 +73,15 @@ graph *create_complete_graph(station *node, int node_count)
                 edges_in_g++;
             }
         }
+        
+        
         g->stations_list = node;
-        g->edges_list = edges;
+        g->edges_list = (edge *)malloc(sizeof(edge) * edge_count);
+        memcpy(g->edges_list, edges, sizeof(edge)*edge_count);
+        free(edges);
+        edges = NULL;
         g->vertices = node_count;
         g->edges = edges_in_g;
-	
         return g;
     }
 }
@@ -87,49 +91,12 @@ void destroy_graph(graph **graph)
     {
         return;
     }
-
-    destroy_edges(&((*graph)->edges_list));
-    destroy_nodes(&((*graph)->stations_list));
-
-    free(&graph);
-    graph = NULL;
+	free((*graph)->stations_list);
+	free((*graph)->edges_list);
+	(*graph)->stations_list = NULL;
+	(*graph)->edges_list = NULL;
+    free(*graph);
+    
+    *graph = NULL;
 }
 
-void destroy_nodes(station **nodes)
-{
-    if (!nodes || !(*nodes))
-    {
-        return;
-    }
-
-    int index = 0;
-    station *tmp_n = nodes[index];
-    while (tmp_n)
-    {
-        free(&tmp_n);
-        tmp_n = NULL;
-        index++;
-        tmp_n = nodes[index];
-    }
-
-    free(nodes);
-}
-
-void destroy_edges(edge **edges)
-{
-    if (!edges || !(*edges))
-    {
-        return;
-    }
-
-    int index = 0;
-    edge *tmp_e = edges[index];
-    while (tmp_e)
-    {
-        free(&tmp_e);
-        tmp_e = NULL;
-        index++;
-        tmp_e = edges[index];
-    }
-    free(edges);
-}

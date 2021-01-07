@@ -62,7 +62,6 @@ void write_edges_mrn(char *filename, edge *edges, int edges_count, station *node
     }
 
     fprintf(file, "WKT,id,nation,cntryname,source,target,clength,\n");
-    fflush(file);
     int i, j;
     for (i = 0; i < edges_count; ++i)
     {
@@ -82,7 +81,7 @@ void write_edges_mrn(char *filename, edge *edges, int edges_count, station *node
         }
         fprintf(file, "\"MULTILINESTRING ((%f %f,%f %f))\",%d,%d,%s,%d,%d,%.3f,\n",
                 nodes[pos_src].pos_x, nodes[pos_src].pos_y, nodes[pos_dest].pos_x, nodes[pos_dest].pos_y,
-                tmp_edge->id, tmp_edge->nation_id, tmp_edge->nation_name, tmp_edge->id_src+1, tmp_edge->id_dest+1, tmp_edge->weight);
+                tmp_edge->id, tmp_edge->nation_id,"", tmp_edge->id_src+1, tmp_edge->id_dest+1, tmp_edge->weight);
 
         if (i % 100 == 0)
         {

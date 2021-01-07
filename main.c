@@ -137,9 +137,16 @@ int main(int argc, char *argv[])
         write_edges(e_out_path, kruskal_mst, kruskal_size);
         /*destroy_edges(kruskal_mst);
         destroy_graph(graph);*/
+        
+	free(graph->edges_list);
+	graph->edges_list = NULL;
+    	free(graph);
+    	graph = NULL;
     }
-
+    
 	
+
+
     printf("----------MRN----------\n");
     /*-mrn přepínač*/
     if (m_out)
@@ -158,7 +165,16 @@ int main(int argc, char *argv[])
         write_edges_mrn(m_out_path, kruskal_mrn, kruskal_size, nodes);
         /*destroy_edges(kruskal_mst);
         destroy_graph(graph);*/
+        
+
+        free(graph->stations_list);
+        free(graph->edges_list);
+	graph->edges_list = NULL;
+	graph->stations_list = NULL;
+    	free(graph);
+    	graph = NULL;
     }
+
 
     
     printf("----------END----------\n");

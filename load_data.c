@@ -119,7 +119,7 @@ station *load_nodes(char *file_path, int *n)
             else if (i == NODE_WKT_COLUMN)
             {
                 temp_node.pos_y = extract_pos(column, 1);
-
+		free(tmp);
                 tmp = _strdup(line);
                 column = getfield(tmp, i, ",");
 
@@ -257,13 +257,20 @@ edge *load_edges(char *file_path, int *e)
         temp_edge.nation_id = 0;
         strcpy(temp_edge.nation_name, "");
 
-        params_in_line = get_param_count_edges(_strdup(line));
-        real_params = get_real_params(_strdup(line));
+	char *tmp_params = _strdup(line);
+        params_in_line = get_param_count_edges(tmp_params);
+        free(tmp_params);
+        tmp_params = _strdup(line);
+        real_params = get_real_params(tmp_params);
+        free(tmp_params);
 
         tmp = _strdup(line);
         column = getfield(tmp, 1, ")");
-        strcpy(temp_edge.pos, _strdup(column));
-
+        
+        char *tmp2 = _strdup(column);
+        strcpy(temp_edge.pos, tmp2);
+	free(tmp);
+	free(tmp2);
 
         for (i = 1; i <= params_in_line; ++i)
         {
@@ -326,7 +333,7 @@ edge *load_edges(char *file_path, int *e)
                 }
             }
 
-           
+           free(tmp);
         }
 
         bad = 0;
@@ -362,8 +369,9 @@ float extract_pos(char *line, int pos)
     column = getfield(column, 1, ")");
     /*Získá číslo*/
     column = getfield(column, pos, " ");
-
+	
     float pos_r = atof(column);
+    free(tmp);
     return pos_r;
 }
 
