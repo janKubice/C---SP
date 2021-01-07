@@ -133,12 +133,13 @@ int main(int argc, char *argv[])
         /*destroy_edges(graph->edges_list);*/
         printf("Kruskal done - mst\n");
 
-        quick_sort_id(kruskal_mst, 0, kruskal_size);
+        quick_sort_id(kruskal_mst, 0, kruskal_size-1);
         write_edges(e_out_path, kruskal_mst, kruskal_size);
         /*destroy_edges(kruskal_mst);
         destroy_graph(graph);*/
     }
 
+	
     printf("----------MRN----------\n");
     /*-mrn přepínač*/
     if (m_out)
@@ -159,10 +160,7 @@ int main(int argc, char *argv[])
         destroy_graph(graph);*/
     }
 
-    free(e_out_path);
-    free(edges_path);
-    free(m_out_path);
-    free(nodes_path);
+    
     printf("----------END----------\n");
     printf("Programm successfuly ended");
     exit(EXIT_SUCCESS);

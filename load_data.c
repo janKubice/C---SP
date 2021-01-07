@@ -142,7 +142,7 @@ station *load_nodes(char *file_path, int *n)
 
         int match = 0;
         int j;
-        for (j = 0; j <= nodes_loaded; j++)
+        for (j = 0; j < nodes_loaded; j++)
         {
             station tmp_n = nodes[j];
             if (tmp_n.id == temp_node.id)
@@ -330,7 +330,7 @@ edge *load_edges(char *file_path, int *e)
         }
 
         bad = 0;
-        for (j = 0; j <= edges_count; j++)
+        for (j = 0; j < edges_count; j++)
         {
             tmp_n = &edges[j];
             if ((tmp_n->id == temp_edge.id) || (temp_edge.id_src == temp_edge.id_dest) || (tmp_n->id_src == temp_edge.id_src && tmp_n->id_dest == temp_edge.id_dest))
@@ -362,8 +362,6 @@ float extract_pos(char *line, int pos)
     column = getfield(column, 1, ")");
     /*Získá číslo*/
     column = getfield(column, pos, " ");
-
-    free(tmp);
 
     float pos_r = atof(column);
     return pos_r;

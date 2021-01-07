@@ -102,11 +102,11 @@ void destroy_subsets(subset **subset, int subset_count)
         return;
     }
 
-    int i;
+    /*int i;
     for (i = 0; i < subset_count; i++)
     {
         free(subset[i]);
-    }
+    }*/
     free(*subset);
     *subset = NULL;
 }

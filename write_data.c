@@ -63,13 +63,12 @@ void write_edges_mrn(char *filename, edge *edges, int edges_count, station *node
 
     fprintf(file, "WKT,id,nation,cntryname,source,target,clength,\n");
     fflush(file);
-
     int i, j;
     for (i = 0; i < edges_count; ++i)
     {
         tmp_edge = &edges[i];
 
-        for (j = 0; j < edges_count + 1; ++j)
+        for (j = 0; j < edges_count; ++j)
         {
             if (nodes[j].id == tmp_edge->id_src)
             {

@@ -37,7 +37,7 @@ graph *create_complete_graph(station *node, int node_count)
         exit(EXIT_FAILURE);
     }
 
-    int edge_count = (int)((node_count * (node_count - 1)));
+    int edge_count = (int)((node_count * (node_count -1)));
     edge *edges = (edge *)malloc(sizeof(edge) * edge_count);
     graph *g = (graph *)malloc(sizeof(graph));
 
@@ -76,8 +76,8 @@ graph *create_complete_graph(station *node, int node_count)
         g->stations_list = node;
         g->edges_list = edges;
         g->vertices = node_count;
-        g->edges = edge_count;
-
+        g->edges = edges_in_g;
+	
         return g;
     }
 }
