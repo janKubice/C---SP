@@ -114,7 +114,7 @@ station *load_nodes(char *file_path, int *n)
 
             if (i == NODE_ID_COLUMN)
             {
-                temp_node.id = atoi(column);
+                temp_node.id = atoi(column)-1;
             }
             else if (i == NODE_WKT_COLUMN)
             {
@@ -283,11 +283,11 @@ edge *load_edges(char *file_path, int *e)
                 }
                 else if (i == params_in_line - EDGE_SOURCE_COLUMN - EDGE_PARAM_CORECTION)
                 {
-                    temp_edge.id_src = atoi(column);
+                    temp_edge.id_src = atoi(column)-1;
                 }
                 else if (i == params_in_line - EDGE_TARGER_COLUMN - EDGE_PARAM_CORECTION)
                 {
-                    temp_edge.id_dest = atoi(column);
+                    temp_edge.id_dest = atoi(column)-1;
                 }
                 else if (i == params_in_line - EDGE_CNAME_COLUMN)
                 {
@@ -310,11 +310,11 @@ edge *load_edges(char *file_path, int *e)
                 }
                 else if (i == params_in_line - EDGE_SOURCE_COLUMN)
                 {
-                    temp_edge.id_src = atoi(column);
+                    temp_edge.id_src = atoi(column)-1;
                 }
                 else if (i == params_in_line - EDGE_TARGER_COLUMN)
                 {
-                    temp_edge.id_dest = atoi(column);
+                    temp_edge.id_dest = atoi(column)-1;
                 }
                 else if (i == params_in_line - EDGE_CNAME_COLUMN)
                 {
@@ -346,7 +346,7 @@ edge *load_edges(char *file_path, int *e)
             edges_count++;
         }
     }
-
+    printf("%d - ", edges_count);
     *e = edges_count;
     return edges;
 }

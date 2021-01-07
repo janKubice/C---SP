@@ -57,7 +57,7 @@ graph *create_complete_graph(station *node, int node_count)
             can_add = 1;
             for (e = 0; e < edges_in_g; e++)
             {
-                if ((edges[e].id_src == i+1 && edges[e].id_dest == j+1) || (edges[e].id_dest == i+1 && edges[e].id_src == j+1))
+                if ((edges[e].id_src == i && edges[e].id_dest == j) || (edges[e].id_dest == i && edges[e].id_src == j))
                 {
                     can_add = 0;
                 }
@@ -66,8 +66,8 @@ graph *create_complete_graph(station *node, int node_count)
             if (i != j && can_add == 1)
             {
                 edges[edges_in_g].id = 0;
-                edges[edges_in_g].id_src = i + 1;
-                edges[edges_in_g].id_dest = j + 1;
+                edges[edges_in_g].id_src = i;
+                edges[edges_in_g].id_dest = j;
                 edges[edges_in_g].nation_id = 0;
                 edges[edges_in_g].weight = great_circle(node[i].pos_x, node[i].pos_y, node[j].pos_x, node[j].pos_y);
                 edges_in_g++;
