@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "graph.h"
-#define strdup _strdup
+
 void write_edges(char *filename, edge *edges, int edges_count)
 {
     if (!filename || !edges || edges_count <= 0)

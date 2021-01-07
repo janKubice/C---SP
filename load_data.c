@@ -4,7 +4,7 @@
 
 #include "load_data.h"
 
-/*Definovani */
+/*definování správného názvu metody pro linux */
 #ifdef __linux__
 	#define _strdup strdup
 #endif
@@ -51,7 +51,6 @@ int check_node_file(FILE *file)
             }
 
             free(tmp);
-            free(column);
         }
 
         /*Zastaví na druhé řádce*/
@@ -139,7 +138,6 @@ station *load_nodes(char *file_path, int *n)
             }
 
             free(tmp);
-            free(column);
         }
 
         int match = 0;
@@ -190,7 +188,6 @@ int check_edge_file(FILE *file)
             }
 
             free(tmp);
-            free(column);
         }
 
         /*Zastavím na druhé řádce*/
@@ -265,7 +262,6 @@ edge *load_edges(char *file_path, int *e)
 
         tmp = _strdup(line);
         column = getfield(tmp, 1, ")");
-        /*strcpy(temp_edge->pos,line_to_point(column, params_in_line));*/
         strcpy(temp_edge.pos, _strdup(column));
 
 
@@ -367,8 +363,10 @@ float extract_pos(char *line, int pos)
     /*Získá číslo*/
     column = getfield(column, pos, " ");
 
-    
-    return atof(column);
+    free(tmp);
+
+    float pos_r = atof(column);
+    return pos_r;
 }
 
 char *getfield(char *line, int pos, char *delimiter)

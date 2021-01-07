@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -pedantic -ansi -lm
+CFLAGS = -Wall -Wextra -pedantic -ansi -g -lm
 
 BIN = railways
 OBJ = main.o load_data.o graph.o write_data.o algorithms.o

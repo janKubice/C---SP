@@ -5,17 +5,13 @@
 
 #include "graph.h"
 #include "algorithms.h"
-#define strdup _strdup
+
 /*definování PI, nefungovalo mi knihovní PI*/
 #define PI acos(-1.0)
 #define EARTH_DIA 6371.11
 
 int find(subset *subset, int i)
 {
-    if (subset[i].parent < 0 || i < 0)
-    {
-        return -1;
-    }
     if (subset[i].parent != i)
     {
         subset[i].parent = find(subset, subset[i].parent);
@@ -25,18 +21,8 @@ int find(subset *subset, int i)
 
 void k_union(subset *subset, int x, int y)
 {
-    if (!subset || x <= 0 || y <= 0)
-    {
-        return;
-    }
-
     int xroot = find(subset, x);
     int yroot = find(subset, y);
-
-    if (xroot == -1 || yroot == -1)
-    {
-        return;
-    }
 
     if (subset[xroot].rank < subset[yroot].rank)
         subset[xroot].parent = yroot;
@@ -73,43 +59,45 @@ edge *kruskal(graph *graph, int *kruskal_size)
     int i = 0;
     int j = 0;
 
-    subset *subsets = (subset *)malloc(sizeof(subset) * v);
+    subset *subsets = (subset *)malloc(sizeof(subset) * v+1);
     if (!subsets)
     {
         printf("Not enough memory - kruskal - subsets\n");
         return NULL;
     }
 
-    for (j = 0; j < v; j++)
+    for (j = 0; j < v+1; j++)
     {
         subsets[j].parent = j;
         subsets[j].rank = 0;
     }
 
+  
+
     while (e < v - 1 && i < graph->edges)
     {
         edge next_edge = graph->edges_list[i++];
-
         int x = find(subsets, next_edge.id_src);
         int y = find(subsets, next_edge.id_dest);
 
         if (x != y)
         {
             size++;
+            
             memcpy(&result[e++], &next_edge, sizeof(edge));
             k_union(subsets, x, y);
         }
-    }
-    int a;
 
-    /*destroy_subsets(subsets, v);*/
+    }
+
+    destroy_subsets(&subsets, v);
     *kruskal_size = size;
     return result;
 }
 
 void destroy_subsets(subset **subset, int subset_count)
 {
-    if (!subset || !(*subset) || subset_count <= 0)
+    if (!subset || !*subset || subset_count <= 0)
     {
         return;
     }
@@ -119,8 +107,8 @@ void destroy_subsets(subset **subset, int subset_count)
     {
         free(subset[i]);
     }
-    free(subset);
-    subset = NULL;
+    free(*subset);
+    *subset = NULL;
 }
 
 void swap(edge *edge1, edge *edge2)

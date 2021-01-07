@@ -6,12 +6,12 @@
 
 #include "graph.h"
 #include "algorithms.h"
-#define strdup _strdup
+
 graph *create_graph(station *node, edge *edges, int edges_count, int node_count)
 {
     if (!node || !edges || edges_count <= 0 || node_count <= 0)
     {
-        printf("Terminating procces - cant create graph\n");
+        printf("Terminating procces - cant create graph\n"); 
         exit(EXIT_FAILURE);
     }
     graph *new_graph = (graph *)malloc(sizeof(graph));

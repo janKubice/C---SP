@@ -7,7 +7,7 @@
 #include "algorithms.h"
 #include "write_data.h"
 #include "graph.h"
-#define strdup _strdup
+
 #define PATH_SIZE 100
 
 int main(int argc, char *argv[])
@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    graph *graph;
     station *nodes;
     edge *edges;
     int e, n;
@@ -118,7 +117,7 @@ int main(int argc, char *argv[])
         exit(2);
     }
     
-
+    graph *graph;
     printf("----------MST----------\n");
     /*-mst přepínač*/
     int kruskal_size;
@@ -160,6 +159,10 @@ int main(int argc, char *argv[])
         destroy_graph(graph);*/
     }
 
+    free(e_out_path);
+    free(edges_path);
+    free(m_out_path);
+    free(nodes_path);
     printf("----------END----------\n");
     printf("Programm successfuly ended");
     exit(EXIT_SUCCESS);
