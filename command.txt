@@ -1,0 +1,1 @@
+railways.exe -e edges.csv -mst emst.cv -mrn emrn.csv -v nodes.csv

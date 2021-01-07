@@ -1,33 +1,26 @@
-# Použitý překladač
 CC = gcc
-CFLAGS = -Wall -Wextra -pedantic -ansi
+CFLAGS = -Wall -Wextra -pedantic -ansi -lm
 
-# Binární soubory projektu
-BIN = bin/railways
-OBJ = main.o load_data.o graph.o point.o write_data.o algorithms.o
+BIN = railways
+OBJ = main.o load_data.o graph.o write_data.o algorithms.o
 
-# Návody pro sestavení projektu
 $(BIN): $(OBJ)
 	$(CC) $(OBJ) -o $(BIN) $(CFLAGS)
 
-main.o: Source\main.c
-	gcc -c Source\main.c $(CFLAGS)
+main.o: main.c
+	gcc -c main.c $(CFLAGS)
 
-load_data.o: Source\load_data.c Headers\load_data.h
-	gcc -c Source\load_data.c $(CFLAGS)
+load_data.o: load_data.c load_data.h
+	gcc -c load_data.c $(CFLAGS)
 
-graph.o: Source\graph.c Headers\graph.h
-	gcc -c Source\graph.c $(CFLAGS)
+graph.o: graph.c graph.h
+	gcc -c graph.c $(CFLAGS)
 
-point.o: Source\point.c Headers\point.h
-	gcc -c Source\point.c $(CFLAGS)
+write_data.o: write_data.c write_data.h
+	gcc -c write_data.c $(CFLAGS)
 
-write_data.o: Source\write_data.c Headers\write_data.h
-	gcc -c Source\write_data.c $(CFLAGS)
+algorithms.o: algorithms.c algorithms.h
+	gcc -c algorithms.c $(CFLAGS)
 
-algorithms.o: Source\algorithms.c Headers\algorithms.h
-	gcc -c Source\algorithms.c $(CFLAGS)
-
-# Na Windows místo rm bude del!
 clean:
 	rm -f $(BIN) $(OBJ)
