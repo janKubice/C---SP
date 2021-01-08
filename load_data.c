@@ -6,11 +6,14 @@
 
 /*definování správného názvu metody pro linux */
 #ifdef __linux__
-	#define _strdup strdup
+#define _strdup strdup
 #endif
 
 #define NODES_PARAMS 3
 #define EDGES_PARAMS 7
+
+#define NODES_PARAMS_LENGHT 13
+#define EDGES_PARAMS_LENGHT 46
 
 #define NODE_WKT_COLUMN 1
 #define NODE_ID_COLUMN 2
@@ -35,33 +38,15 @@ int check_node_file(FILE *file)
     }
 
     char line[STATION_LINE_LENGHT];
-    int stop_line = 1;
-    int param_count = 0;
+    int good = 0;
 
-    while (fgets(line, STATION_LINE_LENGHT, file))
-    {
-        int i;
-        for (i = 1; i <= NODES_PARAMS; i++)
-        {
-            char *tmp = _strdup(line);
-            char *column = getfield(tmp, i, ",");
-            if (strcmp("WKT", column) == 0 || strcmp("id", column) == 0 || strcmp("sname", column) == 0)
-            {
-                param_count++;
-            }
-
-            free(tmp);
-        }
-
-        /*Zastaví na druhé řádce*/
-        stop_line++;
-        if (stop_line == 2)
-        {
-            break;
-        }
+    fgets(line, NODES_PARAMS_LENGHT, file);
+   
+    if (strcmp(line, "WKT,id,sname")==0){
+        good = 1;
     }
 
-    if (param_count == NODES_PARAMS)
+    if (good)
     {
         return 1;
     }
@@ -75,7 +60,6 @@ station *load_nodes(char *file_path, int *n)
 {
     if (!file_path || !n)
     {
-        printf("Terminating procces - can't load nodes\n");
         exit(EXIT_FAILURE);
     }
     FILE *file = fopen(file_path, "r");
@@ -96,7 +80,6 @@ station *load_nodes(char *file_path, int *n)
 
     if (!nodes)
     {
-        printf("Not enough memory for nodes\n");
         exit(EXIT_FAILURE);
     }
 
@@ -114,12 +97,12 @@ station *load_nodes(char *file_path, int *n)
 
             if (i == NODE_ID_COLUMN)
             {
-                temp_node.id = atoi(column)-1;
+                temp_node.id = atoi(column) - 1;
             }
             else if (i == NODE_WKT_COLUMN)
             {
                 temp_node.pos_y = extract_pos(column, 1);
-		free(tmp);
+                free(tmp);
                 tmp = _strdup(line);
                 column = getfield(tmp, i, ",");
 
@@ -158,12 +141,11 @@ station *load_nodes(char *file_path, int *n)
             nodes_loaded++;
         }
     }
-	fclose(file);
+    fclose(file);
 
     *n = nodes_loaded;
     return nodes;
 }
-
 
 int check_edge_file(FILE *file)
 {
@@ -172,34 +154,16 @@ int check_edge_file(FILE *file)
         return 0;
     }
 
-    char line[EDGE_LINE_LENGHT];
-    int stop_line = 1;
-    int param_count = 0;
+    char line[STATION_LINE_LENGHT];
+    int good = 0;
 
-    while (fgets(line, EDGE_LINE_LENGHT, file))
-    {
-        int i;
-        for (i = 1; i <= EDGES_PARAMS; i++)
-        {
-            char *tmp = _strdup(line);
-            char *column = getfield(tmp, i, ",");
-            if (strcmp("WKT", column) == 0 || strcmp("id", column) == 0 || strcmp("nation", column) == 0 || strcmp("cntryname", column) == 0 || strcmp("source", column) == 0 || strcmp("target", column) == 0 || strcmp("clength", column) == 0)
-            {
-                param_count++;
-            }
-
-            free(tmp);
-        }
-
-        /*Zastavím na druhé řádce*/
-        stop_line++;
-        if (stop_line == 2)
-        {
-            break;
-        }
+    fgets(line, EDGES_PARAMS_LENGHT, file);
+   
+    if (strcmp(line, "WKT,id,nation,cntryname,source,target,clength")==0){
+        good = 1;
     }
 
-    if (param_count == EDGES_PARAMS)
+    if (good)
     {
         return 1;
     }
@@ -207,13 +171,13 @@ int check_edge_file(FILE *file)
     {
         return 0;
     }
+    
 }
 
 edge *load_edges(char *file_path, int *e)
 {
     if (!file_path)
     {
-        printf("Terminating procces - can't load edges\n");
         exit(EXIT_FAILURE);
     }
     FILE *file = fopen(file_path, "r");
@@ -243,7 +207,6 @@ edge *load_edges(char *file_path, int *e)
     edges = (edge *)malloc(sizeof(edge) * edges_lines + 1);
     if (!edges)
     {
-        printf("Not enough memory for edges\n");
         exit(EXIT_FAILURE);
     }
 
@@ -258,7 +221,7 @@ edge *load_edges(char *file_path, int *e)
         temp_edge.nation_id = 0;
         strcpy(temp_edge.nation_name, "");
 
-	char *tmp_params = _strdup(line);
+        char *tmp_params = _strdup(line);
         params_in_line = get_param_count_edges(tmp_params);
         free(tmp_params);
         tmp_params = _strdup(line);
@@ -267,11 +230,11 @@ edge *load_edges(char *file_path, int *e)
 
         tmp = _strdup(line);
         column = getfield(tmp, 1, ")");
-        
+
         char *tmp2 = _strdup(column);
         strcpy(temp_edge.pos, tmp2);
-	free(tmp);
-	free(tmp2);
+        free(tmp);
+        free(tmp2);
 
         for (i = 1; i <= params_in_line; ++i)
         {
@@ -291,11 +254,11 @@ edge *load_edges(char *file_path, int *e)
                 }
                 else if (i == params_in_line - EDGE_SOURCE_COLUMN - EDGE_PARAM_CORECTION)
                 {
-                    temp_edge.id_src = atoi(column)-1;
+                    temp_edge.id_src = atoi(column) - 1;
                 }
                 else if (i == params_in_line - EDGE_TARGER_COLUMN - EDGE_PARAM_CORECTION)
                 {
-                    temp_edge.id_dest = atoi(column)-1;
+                    temp_edge.id_dest = atoi(column) - 1;
                 }
                 else if (i == params_in_line - EDGE_CNAME_COLUMN)
                 {
@@ -318,11 +281,11 @@ edge *load_edges(char *file_path, int *e)
                 }
                 else if (i == params_in_line - EDGE_SOURCE_COLUMN)
                 {
-                    temp_edge.id_src = atoi(column)-1;
+                    temp_edge.id_src = atoi(column) - 1;
                 }
                 else if (i == params_in_line - EDGE_TARGER_COLUMN)
                 {
-                    temp_edge.id_dest = atoi(column)-1;
+                    temp_edge.id_dest = atoi(column) - 1;
                 }
                 else if (i == params_in_line - EDGE_CNAME_COLUMN)
                 {
@@ -334,7 +297,7 @@ edge *load_edges(char *file_path, int *e)
                 }
             }
 
-           free(tmp);
+            free(tmp);
         }
 
         bad = 0;
@@ -347,7 +310,7 @@ edge *load_edges(char *file_path, int *e)
                 break;
             }
         }
-        
+
         if (bad == 0)
         {
             edges[edges_count] = temp_edge;
@@ -355,7 +318,6 @@ edge *load_edges(char *file_path, int *e)
         }
     }
     fclose(file);
-    printf("%d - ", edges_count);
     *e = edges_count;
     return edges;
 }
@@ -371,7 +333,7 @@ float extract_pos(char *line, int pos)
     column = getfield(column, 1, ")");
     /*Získá číslo*/
     column = getfield(column, pos, " ");
-	
+
     float pos_r = atof(column);
     free(tmp);
     return pos_r;

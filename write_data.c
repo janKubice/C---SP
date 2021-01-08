@@ -11,7 +11,6 @@ void write_edges(char *filename, edge *edges, int edges_count)
         return;
     }
 
-    printf("Creating %s\n", filename);
     FILE *file;
     edge *tmp_edge;
     file = fopen(filename, "w+");
@@ -21,7 +20,7 @@ void write_edges(char *filename, edge *edges, int edges_count)
         return;
     }
 
-    fprintf(file, "WKT,id,nation,cntryname,source,target,clength,\n");
+    fprintf(file, "WKT,id,nation,cntryname,source,target,clength\n");
     fflush(file);
 
     int i;
@@ -29,8 +28,8 @@ void write_edges(char *filename, edge *edges, int edges_count)
     {
         tmp_edge = &edges[i];
 
-        fprintf(file, "%s))\",%d,%d,%s,%d,%d,%f,\n",
-                tmp_edge->pos, tmp_edge->id, tmp_edge->nation_id, tmp_edge->nation_name, tmp_edge->id_src+1, tmp_edge->id_dest+1, tmp_edge->weight);
+        fprintf(file, "%s))\",%d,%d,%s,%d,%d,%f\n",
+                tmp_edge->pos, tmp_edge->id, tmp_edge->nation_id, tmp_edge->nation_name, tmp_edge->id_src + 1, tmp_edge->id_dest + 1, tmp_edge->weight);
 
         if (i % 100 == 0)
         {
@@ -39,7 +38,6 @@ void write_edges(char *filename, edge *edges, int edges_count)
     }
 
     fclose(file);
-    printf("File created: %s\n", filename);
 }
 
 void write_edges_mrn(char *filename, edge *edges, int edges_count, station *nodes)
@@ -48,8 +46,6 @@ void write_edges_mrn(char *filename, edge *edges, int edges_count, station *node
     {
         return;
     }
-
-    printf("Creating %s\n", filename);
     FILE *file;
     edge *tmp_edge;
     int pos_src, pos_dest;
@@ -61,12 +57,12 @@ void write_edges_mrn(char *filename, edge *edges, int edges_count, station *node
         return;
     }
 
-    fprintf(file, "WKT,id,nation,cntryname,source,target,clength,\n");
+    fprintf(file, "WKT,id,nation,cntryname,source,target,clength\n");
     int i, j;
     for (i = 0; i < edges_count; ++i)
     {
         tmp_edge = &edges[i];
-
+        tmp_edge->id = i + 1;
         for (j = 0; j < edges_count; ++j)
         {
             if (nodes[j].id == tmp_edge->id_src)
@@ -79,9 +75,9 @@ void write_edges_mrn(char *filename, edge *edges, int edges_count, station *node
                 pos_dest = j;
             }
         }
-        fprintf(file, "\"MULTILINESTRING ((%f %f,%f %f))\",%d,%d,%s,%d,%d,%.3f,\n",
+        fprintf(file, "\"MULTILINESTRING ((%f %f,%f %f))\",%d,%d,%s,%d,%d,%.3f\n",
                 nodes[pos_src].pos_x, nodes[pos_src].pos_y, nodes[pos_dest].pos_x, nodes[pos_dest].pos_y,
-                tmp_edge->id, tmp_edge->nation_id,"", tmp_edge->id_src+1, tmp_edge->id_dest+1, tmp_edge->weight);
+                tmp_edge->id, tmp_edge->nation_id, "", tmp_edge->id_src + 1, tmp_edge->id_dest + 1, tmp_edge->weight);
 
         if (i % 100 == 0)
         {
@@ -90,6 +86,5 @@ void write_edges_mrn(char *filename, edge *edges, int edges_count, station *node
     }
 
     fclose(file);
- 
-    printf("File created: %s\n", filename);
+
 }

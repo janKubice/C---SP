@@ -17,8 +17,6 @@ int main(int argc, char *argv[])
     char edges_path[PATH_SIZE], nodes_path[PATH_SIZE], e_out_path[PATH_SIZE], m_out_path[PATH_SIZE];
     int m_out = 0, e_out = 0;
 
-    printf("----------LOADING----------\n");
-
     /*Ověření parametrů*/
     if (argc < 2)
     {
@@ -53,7 +51,6 @@ int main(int argc, char *argv[])
 
     if (e_param == 0 || v_param == 0)
     {
-        printf("Not all required parameters inserted\n");
         exit(EXIT_FAILURE);
     }
 
@@ -65,122 +62,91 @@ int main(int argc, char *argv[])
     FILE *file = fopen(nodes_path, "r");
     if (!file)
     {
-        printf("Node file opening failed");
-        exit(EXIT_FAILURE);
+        printf("Invalid vertex file.\n");
+        exit(1);
     }
 
     if (check_node_file(file))
     {
-        printf("Node params checked!\n");
         nodes = load_nodes(nodes_path, &n);
         if (!nodes)
         {
-            printf("Nodes loading failure!\n");
-            exit(EXIT_FAILURE);
-        }
-        else
-        {
-            printf("Nodes loaded\n");
+            printf("Invalid vertex file.\n");
+            free(nodes);
+            fclose(file);
+            exit(1);
         }
     }
     else
     {
         printf("Invalid vertex file.\n");
+        fclose(file);
         exit(1);
     }
     fclose(file);
-
 
     /*část s načítámím souboru s hranama*/
     file = fopen(edges_path, "r");
     if (!file)
     {
-        printf("Edge file opening failed");
         exit(EXIT_FAILURE);
     }
     if (check_edge_file(file))
     {
-        printf("Edge params checked!\n");
         edges = load_edges(edges_path, &e);
 
         if (!edges)
         {
-            printf("Edges loading failure!\n");
             exit(EXIT_FAILURE);
-        }
-        else
-        {
-            printf("Edges loaded\n");
         }
     }
     else
     {
-        printf("Invalid edge file!\n");
-        exit(2);
+        printf("Invalid edge file.\n");
+        free(nodes);
+        fclose(file);
+        return 2;
     }
     fclose(file);
     graph *graph;
-    printf("----------MST----------\n");
     /*-mst přepínač*/
     int kruskal_size;
     if (e_out)
     {
         edge *kruskal_mst;
-        printf("Creating graph\n");
         graph = create_graph(nodes, edges, e, n);
-        printf("Graph done!\n");
 
-        printf("Kruskal started - mst\n");
         kruskal_mst = kruskal(graph, &kruskal_size);
-        /*destroy_edges(graph->edges_list);*/
-        printf("Kruskal done - mst\n");
 
-        quick_sort_id(kruskal_mst, 0, kruskal_size-1);
+        quick_sort_id(kruskal_mst, 0, kruskal_size - 1);
         write_edges(e_out_path, kruskal_mst, kruskal_size);
-        /*destroy_edges(kruskal_mst);
-        destroy_graph(graph);*/
-        
+
         free(kruskal_mst);
-	free(graph->edges_list);
-	graph->edges_list = NULL;
-    	free(graph);
-    	graph = NULL;
+        free(graph->edges_list);
+        free(graph);
+
     }
-    
-	
-
-
-    printf("----------MRN----------\n");
     /*-mrn přepínač*/
     if (m_out)
     {
+
         edge *kruskal_mrn;
-        printf("Creating graph -mrn\n");
         graph = create_complete_graph(nodes, n);
-        printf("Graph done -mrn!\n");
 
-        printf("Kruskal started - mrn\n");
-        
         kruskal_mrn = kruskal(graph, &kruskal_size);
-        /*destroy_edges(graph->edges_list);*/
-        printf("Kruskal done - mrn\n");
 
+        quick_sort_decs(kruskal_mrn, 0, kruskal_size-1);
         write_edges_mrn(m_out_path, kruskal_mrn, kruskal_size, nodes);
-        /*destroy_edges(kruskal_mst);
-        destroy_graph(graph);*/
-        
-	free(kruskal_mrn);
-        free(graph->stations_list);
+
+        free(kruskal_mrn);
         free(graph->edges_list);
-	graph->edges_list = NULL;
-	graph->stations_list = NULL;
-    	free(graph);
-    	graph = NULL;
+        free(graph->stations_list);
+        free(graph);
     }
 
-
+    if (!m_out){
+        free(nodes);
+    }
     
-    printf("----------END----------\n");
-    printf("Programm successfuly ended");
     exit(EXIT_SUCCESS);
 }

@@ -100,4 +100,10 @@ void swap(edge *edge1, edge *edge2);
  */
 void destroy_subsets(subset **subset, int subset_count);
 
+/**
+ * @brief převede stupně na radiány
+ * @param degree podmnožina k uvolnění
+ * @return číslo  v radiánech
+ */
+float to_radians(float degree);
 #endif
