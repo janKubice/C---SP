@@ -90,7 +90,6 @@ int main(int argc, char *argv[])
     }
     fclose(file);
 
-
     /*část s načítámím souboru s hranama*/
     file = fopen(edges_path, "r");
     if (!file)
@@ -132,23 +131,18 @@ int main(int argc, char *argv[])
 
         printf("Kruskal started - mst\n");
         kruskal_mst = kruskal(graph, &kruskal_size);
-        /*destroy_edges(graph->edges_list);*/
+
         printf("Kruskal done - mst\n");
 
-        quick_sort_id(kruskal_mst, 0, kruskal_size-1);
+        quick_sort_id(kruskal_mst, 0, kruskal_size - 1);
         write_edges(e_out_path, kruskal_mst, kruskal_size);
-        /*destroy_edges(kruskal_mst);
-        destroy_graph(graph);*/
-        
-        free(kruskal_mst);
-	free(graph->edges_list);
-	graph->edges_list = NULL;
-    	free(graph);
-    	graph = NULL;
-    }
-    
-	
 
+        free(kruskal_mst);
+        free(graph->edges_list);
+        graph->edges_list = NULL;
+        free(graph);
+        graph = NULL;
+    }
 
     printf("----------MRN----------\n");
     /*-mrn přepínač*/
@@ -160,27 +154,23 @@ int main(int argc, char *argv[])
         printf("Graph done -mrn!\n");
 
         printf("Kruskal started - mrn\n");
-        
+
         kruskal_mrn = kruskal(graph, &kruskal_size);
-        /*destroy_edges(graph->edges_list);*/
         printf("Kruskal done - mrn\n");
 
+        quick_sort_decs(kruskal_mrn, 0, kruskal_size);
         write_edges_mrn(m_out_path, kruskal_mrn, kruskal_size, nodes);
-        /*destroy_edges(kruskal_mst);
-        destroy_graph(graph);*/
-        
-	free(kruskal_mrn);
+
+        free(kruskal_mrn);
         free(graph->stations_list);
         free(graph->edges_list);
-	graph->edges_list = NULL;
-	graph->stations_list = NULL;
-    	free(graph);
-    	graph = NULL;
+        graph->edges_list = NULL;
+        graph->stations_list = NULL;
+        free(graph);
+        graph = NULL;
     }
 
-
-    
-    printf("----------END----------\n");
+    printf("----------END----------\n"); 
     printf("Programm successfuly ended");
     exit(EXIT_SUCCESS);
 }

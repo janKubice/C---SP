@@ -61,23 +61,5 @@ graph *create_graph(station *node, edge *edges, int edges_count, int node_count)
  * @param node_count počet vrcholů
  */
 graph *create_complete_graph(station *node,int node_count);
-
-/**
- * @brief uvolní graf z paměti
- * @param graph graf k uvolnění
- */
-void destroy_graph(graph **graph);
-
-/**
- * @brief uvolní pole vrcholů z paměti
- * @param graph vrcholy k uvolnění
- */
-void destroy_nodes(station **nodes);
-
-/**
- * @brief uvolní pole hran z paměti
- * @param graph hrany k uvolnění
- */
-void destroy_edges(edge **edges);
-
+ 
 #endif

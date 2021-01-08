@@ -42,7 +42,7 @@ edge *kruskal(graph *graph, int *kruskal_size)
     {
         return NULL;
     }
-    
+
     int v = graph->vertices;
     edge *result = (edge *)malloc(sizeof(edge) * v);
     int size = 0;
@@ -72,8 +72,6 @@ edge *kruskal(graph *graph, int *kruskal_size)
         subsets[j].rank = 0;
     }
 
-  
-
     while (e < v - 1 && i < graph->edges)
     {
         edge next_edge = graph->edges_list[i++];
@@ -83,13 +81,12 @@ edge *kruskal(graph *graph, int *kruskal_size)
         if (x != y)
         {
             size++;
-            
+
             memcpy(&result[e++], &next_edge, sizeof(edge));
             k_union(subsets, x, y);
         }
-
     }
-	
+
     destroy_subsets(&subsets, v);
     *kruskal_size = size;
     return result;
@@ -101,7 +98,6 @@ void destroy_subsets(subset **subset, int subset_count)
     {
         return;
     }
-
 
     free(*subset);
     *subset = NULL;
@@ -238,8 +234,22 @@ void quick_sort_decs(edge *edges, int low, int high)
 
 float great_circle(float x1, float y1, float x2, float y2)
 {
-    float angle = acos((cos(PI/2 - x2) * cos(PI/2 - x1)) + (sin(PI/2 - x1) * sin(PI/2 - x2) * cos(y1 - y2)));
-    float distance = angle * (180/PI);
-    distance = distance * PI * EARTH_DIA/180;
+    x1 = to_radians(x1);
+    y1 = to_radians(y1);
+    x2 = to_radians(x2);
+    y2 = to_radians(y2);
+
+    float dlong = y2 - y1;
+    float dlat = x2 - x1;
+    float distance = pow(sin(dlat / 2), 2) + cos(x1) * cos(x2) * pow(sin(dlong / 2), 2);
+    distance = 2 * asin(sqrt(distance));
+
+    distance = distance * EARTH_DIA * 1000;
     return distance;
+}
+
+float to_radians(float degree)
+{
+    float one_deg = (PI) / 180;
+    return (one_deg * degree);
 }

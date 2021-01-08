@@ -6,7 +6,7 @@
 
 /*definování správného názvu metody pro linux */
 #ifdef __linux__
-	#define _strdup strdup
+#define _strdup strdup
 #endif
 
 #define NODES_PARAMS 3
@@ -114,12 +114,12 @@ station *load_nodes(char *file_path, int *n)
 
             if (i == NODE_ID_COLUMN)
             {
-                temp_node.id = atoi(column)-1;
+                temp_node.id = atoi(column) - 1;
             }
             else if (i == NODE_WKT_COLUMN)
             {
                 temp_node.pos_y = extract_pos(column, 1);
-		free(tmp);
+                free(tmp);
                 tmp = _strdup(line);
                 column = getfield(tmp, i, ",");
 
@@ -158,12 +158,11 @@ station *load_nodes(char *file_path, int *n)
             nodes_loaded++;
         }
     }
-	fclose(file);
+    fclose(file);
 
     *n = nodes_loaded;
     return nodes;
 }
-
 
 int check_edge_file(FILE *file)
 {
@@ -258,7 +257,7 @@ edge *load_edges(char *file_path, int *e)
         temp_edge.nation_id = 0;
         strcpy(temp_edge.nation_name, "");
 
-	char *tmp_params = _strdup(line);
+        char *tmp_params = _strdup(line);
         params_in_line = get_param_count_edges(tmp_params);
         free(tmp_params);
         tmp_params = _strdup(line);
@@ -267,11 +266,11 @@ edge *load_edges(char *file_path, int *e)
 
         tmp = _strdup(line);
         column = getfield(tmp, 1, ")");
-        
+
         char *tmp2 = _strdup(column);
         strcpy(temp_edge.pos, tmp2);
-	free(tmp);
-	free(tmp2);
+        free(tmp);
+        free(tmp2);
 
         for (i = 1; i <= params_in_line; ++i)
         {
@@ -291,11 +290,11 @@ edge *load_edges(char *file_path, int *e)
                 }
                 else if (i == params_in_line - EDGE_SOURCE_COLUMN - EDGE_PARAM_CORECTION)
                 {
-                    temp_edge.id_src = atoi(column)-1;
+                    temp_edge.id_src = atoi(column) - 1;
                 }
                 else if (i == params_in_line - EDGE_TARGER_COLUMN - EDGE_PARAM_CORECTION)
                 {
-                    temp_edge.id_dest = atoi(column)-1;
+                    temp_edge.id_dest = atoi(column) - 1;
                 }
                 else if (i == params_in_line - EDGE_CNAME_COLUMN)
                 {
@@ -318,11 +317,11 @@ edge *load_edges(char *file_path, int *e)
                 }
                 else if (i == params_in_line - EDGE_SOURCE_COLUMN)
                 {
-                    temp_edge.id_src = atoi(column)-1;
+                    temp_edge.id_src = atoi(column) - 1;
                 }
                 else if (i == params_in_line - EDGE_TARGER_COLUMN)
                 {
-                    temp_edge.id_dest = atoi(column)-1;
+                    temp_edge.id_dest = atoi(column) - 1;
                 }
                 else if (i == params_in_line - EDGE_CNAME_COLUMN)
                 {
@@ -334,7 +333,7 @@ edge *load_edges(char *file_path, int *e)
                 }
             }
 
-           free(tmp);
+            free(tmp);
         }
 
         bad = 0;
@@ -347,7 +346,7 @@ edge *load_edges(char *file_path, int *e)
                 break;
             }
         }
-        
+
         if (bad == 0)
         {
             edges[edges_count] = temp_edge;
@@ -371,7 +370,7 @@ float extract_pos(char *line, int pos)
     column = getfield(column, 1, ")");
     /*Získá číslo*/
     column = getfield(column, pos, " ");
-	
+
     float pos_r = atof(column);
     free(tmp);
     return pos_r;
